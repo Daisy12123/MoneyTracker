@@ -96,9 +96,11 @@ public class HomeFragment extends Fragment {
         window.setAttributes(lp);
         window.setWindowAnimations(R.style.animStyle);  //添加动画
 
+//        设置收入和支出的选项卡页面
         ViewPager2 viewPager3 = view.findViewById(R.id.typePage);
         viewPager3.setAdapter(new TypePageAdapter(this));
         TabLayout tabLayout1 = view.findViewById(R.id.typeTab);
+//        根据选项卡的位置返回相应的实例
         TabLayoutMediator mediator = new TabLayoutMediator(tabLayout1, viewPager3, (tab, position) -> {
             if (position == 0)
                 tab.setText("支出");
@@ -107,13 +109,17 @@ public class HomeFragment extends Fragment {
         });
         mediator.attach();
 
-
+//        创建资源文件实例
         TextView chooseDate = view.findViewById(R.id.chooseDate);
         EditText moneyTxt = view.findViewById(R.id.money);
         EditText remarkTxt = view.findViewById(R.id.remarkText);
+
+        Button ocrButton = view.findViewById(R.id.ocrButton);
         Button addBt = view.findViewById(R.id.addBt);
+
+//        选择日期
         chooseDate.setOnClickListener(v -> {
-            //获取实例，包含当前年月日
+//            获取实例，包含当前年月日
             Calendar calendar = Calendar.getInstance();
             DatePickerDialog dialog1 = new DatePickerDialog(getActivity(), (view1, year, month, dayOfMonth) -> {
                 chooseDate.setText(String.format(getString(R.string.chooseDate), year, month + 1, dayOfMonth));
@@ -127,6 +133,8 @@ public class HomeFragment extends Fragment {
                     calendar.get(Calendar.DAY_OF_MONTH));
             dialog1.show();
         });
+
+//        填写金额
         moneyTxt.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -176,6 +184,17 @@ public class HomeFragment extends Fragment {
 
             }
         });
+
+//        OCR识别填充
+        ocrButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 执行OCR识别
+//                performOcrAndFillFields();
+            }
+        });
+
+//        添加按钮
         addBt.setOnClickListener(v -> {
             if (String.valueOf(chooseDate.getText()).equals("今天")) {
                 date[0] = Calendar.getInstance().get(Calendar.YEAR);
@@ -208,6 +227,35 @@ public class HomeFragment extends Fragment {
             dialog.dismiss();
         });
     }
+
+//    private void performOcrAndFillFields() {
+//        TextView chooseDate = view.findViewById(R.id.chooseDate);
+//        EditText moneyTxt = view.findViewById(R.id.money);
+//        EditText remarkTxt = view.findViewById(R.id.remarkText);
+//
+//        // 假设你已经获取到了识别的图像
+//        Bitmap ocrImage = getOcrImage();
+//
+//        // 根据具体需求，裁剪出日期、价格和备注的区域
+//        Rect dateRect = getDateRect();
+//        Rect priceRect = getPriceRect();
+//        Rect remarkRect = getRemarkRect();
+//
+//        // 裁剪图像
+//        Bitmap croppedDateImage = cropImage(ocrImage, dateRect);
+//        Bitmap croppedPriceImage = cropImage(ocrImage, priceRect);
+//        Bitmap croppedRemarkImage = cropImage(ocrImage, remarkRect);
+//
+//        // 对裁剪后的图像进行OCR识别，获取识别结果
+//        String dateOcrResult = performOcr(croppedDateImage);
+//        String priceOcrResult = performOcr(croppedPriceImage);
+//        String remarkOcrResult = performOcr(croppedRemarkImage);
+//
+//        // 将识别结果填充到相应的文本框中
+//        chooseDate.setText(dateOcrResult);
+//        moneyTxt.setText(priceOcrResult);
+//        remarkTxt.setText(remarkOcrResult);
+//    }
 }
 
 class ViewPagerAdapter extends FragmentStateAdapter {
@@ -244,6 +292,7 @@ class TypePageAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
+//        如果选项卡位置为 0，则返回 AddExpenditure 实例；如果选项卡位置为 1，则返回 AddIncome 实例。
         return (position == 0) ? AddExpenditure.newInstance("fragment4", "f4") : AddIncome.newInstance("fragment5", "f5");
     }
 

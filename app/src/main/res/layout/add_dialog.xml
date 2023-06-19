@@ -13,7 +13,8 @@
         android:background="@drawable/dialog"
         android:gravity="center"
         android:orientation="vertical"
-        android:padding="10dp">
+        android:padding="10dp"
+        tools:ignore="UselessParent">
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/typeTab"
@@ -107,11 +108,21 @@
         </LinearLayout>
 
         <Button
+            android:id="@+id/ocrButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:text="OCR识别"
+            android:textColor="#5E35B1"
+            app:cornerRadius="20dp" />
+
+        <Button
             android:id="@+id/addBt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
             android:text="@string/add"
+            android:textColor="#5E35B1"
             app:cornerRadius="20dp" />
 
     </LinearLayout>

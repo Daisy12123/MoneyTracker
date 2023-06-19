@@ -1,0 +1,8 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/menu_take_photo"
+        android:title="拍照上传" />
+    <item
+        android:id="@+id/menu_choose_from_album"
+        android:title="从相册上传" />
+</menu>

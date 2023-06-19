@@ -8,6 +8,7 @@ import androidx.room.Update;
 
 import java.util.List;
 
+//定义数据访问对象，接口（数据库操作方法）
 @Dao
 public interface DatabaseLists {
     @Query("SELECT * FROM MyDatabase ORDER BY year DESC,month DESC,day DESC,id DESC")

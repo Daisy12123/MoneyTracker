@@ -36,10 +36,12 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemAdapter.
         this.itemsList = itemsList;
     }
 
+//    更新数据列表
     public void setData(List<MyDatabase> itemsList) {
         this.itemsList = itemsList;
     }
 
+//    项目点击事件监听器
     public interface OnItemClickListener {
         void onClick(int position, View v);
 
@@ -55,17 +57,20 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemAdapter.
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+//        创建 ViewHolder 实例，并关联 item 的布局文件
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.account_item, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+//        绑定数据到 ViewHolder 中的视图项
         MyDatabase cd = itemsList.get(position);
         holder.itemMoney.setText((cd.getInOut() ? "-" : "+") + String.format("%.2f", (double) cd.getMoney() / 100));
         holder.itemDate.setText(String.format(Locale.CHINA, "%d年%d月%d日", cd.getYear(), cd.getMonth(), cd.getDay()));
         holder.itemType.setText(cd.getRemark().equals("") ? cd.getType() : cd.getRemark());
 
+        // 根据类型设置图标资源
         switch (cd.getType()) {
             case "餐饮":
                 holder.itemIcon.setImageResource(R.drawable.ic_expenditure_catering);
@@ -102,6 +107,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemAdapter.
                 break;
         }
 
+        // 设置项目项的点击事件监听器
         if (mOnItemClickListener != null) {
             holder.itemView.setOnClickListener(v -> mOnItemClickListener.onClick(holder.getAdapterPosition(), v));
             holder.itemView.setOnLongClickListener(v -> {
@@ -111,6 +117,7 @@ public class AccountItemAdapter extends RecyclerView.Adapter<AccountItemAdapter.
         }
     }
 
+    // 返回项目项的数量
     @Override
     public int getItemCount() {
         return itemsList.size();

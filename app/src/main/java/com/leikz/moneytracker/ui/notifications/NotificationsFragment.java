@@ -22,6 +22,8 @@ public class NotificationsFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentNotificationsBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
+
+//        实现滑动切换不同视图
         ViewPager2 viewPager2 = root.findViewById(R.id.viewpager2);
         viewPager2.setAdapter(new ViewPagerAdapter2(this));
         TabLayout tabLayout = root.findViewById(R.id.tabs2);

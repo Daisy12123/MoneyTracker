@@ -26,12 +26,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+//显示支出列表
 public class Expenditure extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
     private static final String ARG_PARAM2 = "param2";
+//    静态的支出列表
     public static List<MyDatabase> expenditureList = new ArrayList<>();
+//    显示列表数据的适配器
     public static AccountItemAdapter adapter = new AccountItemAdapter(expenditureList);
 
     public Expenditure() {
@@ -39,14 +42,13 @@ public class Expenditure extends Fragment {
     }
 
     /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
+     * Create a new instance of the Expenditure fragment using the provided parameters.
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment BlankFragment1.
+     * @return A new instance of the Expenditure fragment.
      */
-    // TODO: Rename and change types and number of parameters
+    // TODO: Rename and change types and number of parameters if needed
     public static Expenditure newInstance(String param1, String param2) {
         Expenditure fragment = new Expenditure();
         Bundle args = new Bundle();
@@ -70,6 +72,7 @@ public class Expenditure extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.expenditure, container, false);
+//        支出列表
         RecyclerView recyclerView = root.findViewById(R.id.expenditureList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());
         recyclerView.setLayoutManager(layoutManager);
@@ -142,6 +145,8 @@ public class Expenditure extends Fragment {
         }
     };
 
+
+//    在后台线程中刷新支出列表数据，并通知适配器进行更新。
     private void refreshList() {
         new Thread(() -> {
             expenditureList = DatabaseAction.getInstance(getContext()).getAllIncomesDao().getAllExpense();

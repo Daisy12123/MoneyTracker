@@ -3,6 +3,7 @@ package com.leikz.moneytracker.database;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+//创建实体类
 @Entity
 public class MyDatabase {
     @PrimaryKey(autoGenerate = true)//主键是否自动增长，默认为false

@@ -14,9 +14,9 @@ import androidx.core.content.ContextCompat;
 import java.util.ArrayList;
 
 public class CardsAdapter extends BaseAdapter {
-    private final ArrayList<Card> cardsList;
-    private final LayoutInflater inflater;
-    private int selPos;
+    private final ArrayList<Card> cardsList;// 卡片数据列表
+    private final LayoutInflater inflater;// 用于加载布局
+    private int selPos;// 选中项的位置
 
     public CardsAdapter(Context context, ArrayList<Card> cardsList, int selPos) {
         super();
@@ -47,6 +47,7 @@ public class CardsAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ViewHolder holder;
+//        判断是否有可重用的视图
         if (convertView == null) {
             holder = new ViewHolder();
             convertView = inflater.inflate(R.layout.card_item, null);
@@ -56,8 +57,10 @@ public class CardsAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-        holder.cardImage.setImageResource(cardsList.get(position).getImageId());
-        holder.typeName.setText(cardsList.get(position).getName());
+        holder.cardImage.setImageResource(cardsList.get(position).getImageId());// 设置卡片图标
+        holder.typeName.setText(cardsList.get(position).getName()); // 设置卡片名称
+
+        // 根据选中项的位置，设置图标的颜色
         if (selPos == position)
             holder.cardImage.setImageTintList(ColorStateList.valueOf(ContextCompat.getColor(convertView.getContext(), R.color.yellow)));
         else
