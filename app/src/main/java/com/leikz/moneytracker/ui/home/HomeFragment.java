@@ -1,10 +1,15 @@
 package com.leikz.moneytracker.ui.home;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
+import android.content.Intent;
+import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
+import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -30,6 +35,7 @@ import com.leikz.moneytracker.database.MyDatabase;
 import com.leikz.moneytracker.databinding.FragmentHomeBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.leikz.moneytracker.OCR.getOCR;
 
 import java.util.Calendar;
 
@@ -185,16 +191,7 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        OCR识别填充
-        ocrButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 执行OCR识别
-//                performOcrAndFillFields();
-            }
-        });
-
-//        添加按钮
+//        添加
         addBt.setOnClickListener(v -> {
             if (String.valueOf(chooseDate.getText()).equals("今天")) {
                 date[0] = Calendar.getInstance().get(Calendar.YEAR);
@@ -226,36 +223,62 @@ public class HomeFragment extends Fragment {
             }).start();
             dialog.dismiss();
         });
+
+//        OCR识别填充
+        ocrButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+//                打开系统图库
+                openGallery();
+
+                // 执行OCR识别
+//                performOcrAndFillFields();
+//                getOCR.shoppingReceipt();
+            }
+        });
     }
 
-//    private void performOcrAndFillFields() {
-//        TextView chooseDate = view.findViewById(R.id.chooseDate);
-//        EditText moneyTxt = view.findViewById(R.id.money);
-//        EditText remarkTxt = view.findViewById(R.id.remarkText);
-//
-//        // 假设你已经获取到了识别的图像
-//        Bitmap ocrImage = getOcrImage();
-//
-//        // 根据具体需求，裁剪出日期、价格和备注的区域
-//        Rect dateRect = getDateRect();
-//        Rect priceRect = getPriceRect();
-//        Rect remarkRect = getRemarkRect();
-//
-//        // 裁剪图像
-//        Bitmap croppedDateImage = cropImage(ocrImage, dateRect);
-//        Bitmap croppedPriceImage = cropImage(ocrImage, priceRect);
-//        Bitmap croppedRemarkImage = cropImage(ocrImage, remarkRect);
-//
-//        // 对裁剪后的图像进行OCR识别，获取识别结果
-//        String dateOcrResult = performOcr(croppedDateImage);
-//        String priceOcrResult = performOcr(croppedPriceImage);
-//        String remarkOcrResult = performOcr(croppedRemarkImage);
-//
-//        // 将识别结果填充到相应的文本框中
-//        chooseDate.setText(dateOcrResult);
-//        moneyTxt.setText(priceOcrResult);
-//        remarkTxt.setText(remarkOcrResult);
-//    }
+
+//    定义用于打开系统图库的函数
+    private static final int REQUEST_GALLERY = 1;
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQUEST_GALLERY);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == REQUEST_GALLERY && resultCode == Activity.RESULT_OK) {
+            if (data != null) {
+                Uri imageUri = data.getData();
+                // 处理图库返回的图片URI，例如执行OCR识别等操作
+                performOcrAndFillFields(imageUri);
+            }
+        }
+    }
+
+    private void performOcrAndFillFields(Uri imageUri) {
+        String imagePath = getImagePathFromUri(imageUri); // 将URI转换为路径
+        getOCR.shoppingReceipt(imagePath); // 调用OCR识别方法
+    }
+
+    private String getImagePathFromUri(Uri imageUri) {
+        String imagePath = null;
+        if (imageUri != null) {
+//            Cursor cursor = getContentResolver().query(imageUri, null, null, null, null);
+            Cursor cursor = requireContext().getContentResolver().query(imageUri, null, null, null, null);
+            if (cursor != null) {
+                cursor.moveToFirst();
+                int index = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+                imagePath = cursor.getString(index);
+                cursor.close();
+            }
+        }
+        return imagePath;
+    }
 }
 
 class ViewPagerAdapter extends FragmentStateAdapter {
