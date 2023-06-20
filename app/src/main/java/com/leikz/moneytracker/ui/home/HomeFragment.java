@@ -1,14 +1,18 @@
 package com.leikz.moneytracker.ui.home;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
+import android.os.Handler;
+
 import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -37,7 +41,21 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.leikz.moneytracker.OCR.getOCR;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
+
+import com.leikz.moneytracker.OCR.OCRResultListener;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONArray;
+
+
 
 public class HomeFragment extends Fragment {
 
@@ -47,6 +65,20 @@ public class HomeFragment extends Fragment {
     public static String remark = "";
     public static long moneyAcc = 0;
     public static int[] date = {0, 0, 0};
+
+//    声明资源文件对应的变量
+    private EditText remarkTxt;
+    private TextView chooseDate;
+    private EditText moneyTxt;
+    private Button ocrButton;
+    private Button addBt;
+
+
+//    请求外部存储权限
+    private static final int REQUEST_EXTERNAL_STORAGE = 1;
+    private static String[] PERMISSIONS_STORAGE = {
+            Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         binding = FragmentHomeBinding.inflate(inflater, container, false);
@@ -116,12 +148,12 @@ public class HomeFragment extends Fragment {
         mediator.attach();
 
 //        创建资源文件实例
-        TextView chooseDate = view.findViewById(R.id.chooseDate);
-        EditText moneyTxt = view.findViewById(R.id.money);
-        EditText remarkTxt = view.findViewById(R.id.remarkText);
+        chooseDate = view.findViewById(R.id.chooseDate);
+        moneyTxt = view.findViewById(R.id.money);
+        remarkTxt = view.findViewById(R.id.remarkText);
 
-        Button ocrButton = view.findViewById(R.id.ocrButton);
-        Button addBt = view.findViewById(R.id.addBt);
+        ocrButton = view.findViewById(R.id.ocrButton);
+        addBt = view.findViewById(R.id.addBt);
 
 //        选择日期
         chooseDate.setOnClickListener(v -> {
@@ -191,13 +223,24 @@ public class HomeFragment extends Fragment {
             }
         });
 
-//        添加
+//        添加按钮
         addBt.setOnClickListener(v -> {
             if (String.valueOf(chooseDate.getText()).equals("今天")) {
                 date[0] = Calendar.getInstance().get(Calendar.YEAR);
                 date[1] = Calendar.getInstance().get(Calendar.MONTH) + 1;
                 date[2] = Calendar.getInstance().get(Calendar.DAY_OF_MONTH);
+            } else if (chooseDate.getText() != null) {
+                String selectedText = chooseDate.getText().toString();
+                String[] dateParts = selectedText.split("-");
+
+                if (dateParts.length == 3) {
+//                    int[] date = new int[3];
+                    date[0] = Integer.parseInt(dateParts[0]);
+                    date[1] = Integer.parseInt(dateParts[1]);
+                    date[2] = Integer.parseInt(dateParts[2]);
+                }
             }
+
             remark = String.valueOf(remarkTxt.getText());
             double mn = String.valueOf(moneyTxt.getText()).equals("") ? 0 : Double.parseDouble(String.valueOf(moneyTxt.getText()));
             moneyAcc = (long) (mn * 100);
@@ -217,10 +260,20 @@ public class HomeFragment extends Fragment {
                     Income.incomeList = DatabaseAction.getInstance(getContext()).getAllIncomesDao().getAllIncomes();
                     Income.handler.sendMessage(msg2);
                 }
-                Looper.prepare();
-                Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
-                Looper.loop();
+////                创建一个与UI线程关联的消息循环
+//                Looper.prepare();//准备与当前线程关联的消息循环
+//                Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+//                Looper.loop();//启动消息循环并处理消息队列中的消息
             }).start();
+
+//            runOnUiThread(() -> {
+//                Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+//            });
+            Handler mainHandler = new Handler(Looper.getMainLooper());
+            mainHandler.post(() -> {
+                Toast.makeText(getContext(), "添加成功", Toast.LENGTH_SHORT).show();
+            });
+
             dialog.dismiss();
         });
 
@@ -230,17 +283,31 @@ public class HomeFragment extends Fragment {
             public void onClick(View v) {
 
 //                打开系统图库
-                openGallery();
 
-                // 执行OCR识别
-//                performOcrAndFillFields();
-//                getOCR.shoppingReceipt();
+                if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED) {
+                    openGallery();
+                } else {
+                    requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+                }
+
             }
         });
     }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_EXTERNAL_STORAGE) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                openGallery();
+            } else {
+                Toast.makeText(requireContext(), "未授予读取外部存储权限", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
 
-//    定义用于打开系统图库的函数
+
+    //    定义用于打开系统图库的函数
     private static final int REQUEST_GALLERY = 1;
 
     private void openGallery() {
@@ -260,11 +327,6 @@ public class HomeFragment extends Fragment {
         }
     }
 
-    private void performOcrAndFillFields(Uri imageUri) {
-        String imagePath = getImagePathFromUri(imageUri); // 将URI转换为路径
-        getOCR.shoppingReceipt(imagePath); // 调用OCR识别方法
-    }
-
     private String getImagePathFromUri(Uri imageUri) {
         String imagePath = null;
         if (imageUri != null) {
@@ -279,6 +341,53 @@ public class HomeFragment extends Fragment {
         }
         return imagePath;
     }
+
+    private void performOcrAndFillFields(Uri imageUri) {
+        String imagePath = getImagePathFromUri(imageUri); // 将URI转换为路径
+        getOCR.shoppingReceipt(imagePath, new OCRResultListener() {
+            @Override
+            public void onOCRResult(String result) {
+                try {
+                    JSONObject jsonResult = new JSONObject(result);
+                    JSONArray wordsResult = jsonResult.getJSONArray("words_result");
+
+                    for (int i = 0; i < wordsResult.length(); i++) {
+                        JSONObject item = wordsResult.getJSONObject(i);
+
+                        if (item.has("shop_name")) {
+                            JSONArray shopNameArray = item.getJSONArray("shop_name");
+                            if (shopNameArray.length() > 0) {
+                                String shopName = shopNameArray.getJSONObject(0).getString("word");
+                                // 填充商店名称到相应的文本框
+                                remarkTxt.setText(shopName);
+                            }
+                        }
+
+                        if (item.has("consumption_date")) {
+                            JSONArray dateArray = item.getJSONArray("consumption_date");
+                            if (dateArray.length() > 0) {
+                                String consumptionDate = dateArray.getJSONObject(0).getString("word");
+                                // 填充购买时间到相应的文本框
+                                chooseDate.setText(consumptionDate);
+                            }
+                        }
+
+                        if (item.has("total_amount")) {
+                            JSONArray amountArray = item.getJSONArray("total_amount");
+                            if (amountArray.length() > 0) {
+                                String totalAmount = amountArray.getJSONObject(0).getString("word");
+                                // 填充金额到相应的文本框
+                                moneyTxt.setText(totalAmount);
+                            }
+                        }
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
 }
 
 class ViewPagerAdapter extends FragmentStateAdapter {
