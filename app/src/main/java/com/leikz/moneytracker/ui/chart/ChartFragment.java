@@ -1,4 +1,4 @@
-package com.leikz.moneytracker.ui.notifications;
+package com.leikz.moneytracker.ui.chart;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,16 +11,16 @@ import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.leikz.moneytracker.R;
-import com.leikz.moneytracker.databinding.FragmentNotificationsBinding;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.leikz.moneytracker.databinding.FragmentChartBinding;
 
-public class NotificationsFragment extends Fragment {
+public class ChartFragment extends Fragment {
 
-    private FragmentNotificationsBinding binding;
+    private FragmentChartBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentNotificationsBinding.inflate(inflater, container, false);
+        binding = FragmentChartBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
 
 //        实现滑动切换不同视图

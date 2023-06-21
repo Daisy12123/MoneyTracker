@@ -1,4 +1,4 @@
-package com.leikz.moneytracker.ui.notifications;
+package com.leikz.moneytracker.ui.chart;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -23,7 +23,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import lecho.lib.hellocharts.model.PieChartData;
 import lecho.lib.hellocharts.model.SliceValue;

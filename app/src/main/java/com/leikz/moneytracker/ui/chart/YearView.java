@@ -1,4 +1,4 @@
-package com.leikz.moneytracker.ui.notifications;
+package com.leikz.moneytracker.ui.chart;
 
 import android.os.Bundle;
 import android.os.Handler;

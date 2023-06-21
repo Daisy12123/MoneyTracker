@@ -14,8 +14,10 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+//        设置布局文件
         setContentView(R.layout.activity_main);
 
+//        初始化底部导航栏
         BottomNavigationView navView = findViewById(R.id.nav_view);
 //        使用底部导航栏的菜单项ID构建AppBarConfiguration
         AppBarConfiguration appBarConfiguration = new AppBarConfiguration.Builder(navView.getMenu()).build();

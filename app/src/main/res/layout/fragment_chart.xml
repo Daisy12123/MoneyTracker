@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:gravity="center"
     android:orientation="vertical"
-    tools:context=".ui.notifications.NotificationsFragment">
+    tools:context=".ui.chart.ChartFragment">
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs2"

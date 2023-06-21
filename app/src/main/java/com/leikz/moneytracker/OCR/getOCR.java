@@ -20,24 +20,68 @@ public class getOCR {
     private static final int REQUEST_EXTERNAL_STORAGE = 1;
     private static String[] PERMISSIONS_STORAGE = {
             Manifest.permission.READ_EXTERNAL_STORAGE
+//            Manifest.permission.READ_MEDIA_AUDIO,
+//            Manifest.permission.READ_MEDIA_IMAGES,
+//            Manifest.permission.READ_MEDIA_VIDEO,
     };
+
+//
+//    private static boolean is_storage_image_permitted = false;
+//    private static boolean is_storage_audio_permitted = false;
+//    private static boolean is_storage_video_permitted = false;
+//
+//    public boolean allPermissionResultCheck() {
+//        return is_storage_image_permitted && is_storage_audio_permitted && is_storage_video_permitted;
+//    }
+
 
     private static AppCompatActivity activity;
 
     public static void setActivity(AppCompatActivity appCompatActivity) {
         activity = appCompatActivity;
+
+//        // 请求图像存储权限
+//        if (activity != null && activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, REQUEST_EXTERNAL_STORAGE);
+//        } else {
+//            is_storage_image_permitted = true;
+//        }
+//
+////      请求音频存储权限
+//        if (activity != null && activity.checkSelfPermission(Manifest.permission.READ_MEDIA_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_MEDIA_AUDIO}, REQUEST_EXTERNAL_STORAGE);
+//        } else {
+//            is_storage_audio_permitted = true;
+//        }
+//
+////      请求视频存储权限
+//        if (activity != null && activity.checkSelfPermission(Manifest.permission.READ_MEDIA_VIDEO) != PackageManager.PERMISSION_GRANTED) {
+//            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_MEDIA_VIDEO}, REQUEST_EXTERNAL_STORAGE);
+//        } else {
+//            is_storage_video_permitted = true;
+//        }
+
     }
 
     public static void shoppingReceipt(String imagepath,OCRResultListener listener) {
 
+//        // 检查应用是否具有读取外部存储的权限
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            if (activity != null && activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+//                // 如果权限未被授予，则请求权限
+//                ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
+////                return null;
+//            }
+//        }
         // 检查应用是否具有读取外部存储的权限
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (activity != null && activity.checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
                 // 如果权限未被授予，则请求权限
                 ActivityCompat.requestPermissions(activity, PERMISSIONS_STORAGE, REQUEST_EXTERNAL_STORAGE);
-//                return null;
+                return;
             }
         }
+
 
         // 创建一个新线程进行网络请求
         Thread thread = new Thread(new Runnable() {

@@ -1,4 +1,4 @@
-package com.leikz.moneytracker.ui.dashboard;
+package com.leikz.moneytracker.ui.Query;
 
 import android.app.Dialog;
 import android.os.Bundle;
@@ -29,7 +29,7 @@ import com.leikz.moneytracker.AccountItemAdapter;
 import com.leikz.moneytracker.R;
 import com.leikz.moneytracker.database.DatabaseAction;
 import com.leikz.moneytracker.database.MyDatabase;
-import com.leikz.moneytracker.databinding.FragmentDashboardBinding;
+import com.leikz.moneytracker.databinding.FragmentQueryBinding;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -38,7 +38,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class DashboardFragment extends Fragment {
+public class QueryFragment extends Fragment {
     public static List<MyDatabase> itemList = new ArrayList<>();
     public static AccountItemAdapter adapter = new AccountItemAdapter(itemList);
     private final List<String> ioList = new ArrayList<>(Arrays.asList("全部", "支出", "收入"));
@@ -55,10 +55,10 @@ public class DashboardFragment extends Fragment {
     boolean allDt = false;
     public static final int COMPLETED = -1;
 
-    private FragmentDashboardBinding binding;
+    private FragmentQueryBinding binding;
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        binding = FragmentDashboardBinding.inflate(inflater, container, false);
+        binding = FragmentQueryBinding.inflate(inflater, container, false);
         View root = binding.getRoot();
         RecyclerView recyclerView = root.findViewById(R.id.searchList);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this.getContext());

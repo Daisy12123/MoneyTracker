@@ -1,16 +1,16 @@
-package com.leikz.moneytracker.ui.notifications;
+package com.leikz.moneytracker.ui.Query;
 
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-public class NotificationsViewModel extends ViewModel {
+public class QueryViewModel extends ViewModel {
 
     private MutableLiveData<String> mText;
 
-    public NotificationsViewModel() {
+    public QueryViewModel() {
         mText = new MutableLiveData<>();
-        mText.setValue("This is notifications fragment");
+        mText.setValue("This is query fragment");
     }
 
     public LiveData<String> getText() {

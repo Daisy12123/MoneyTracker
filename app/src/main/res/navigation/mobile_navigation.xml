@@ -12,14 +12,14 @@
         tools:layout="@layout/fragment_home" />
 
     <fragment
-        android:id="@+id/navigation_dashboard"
-        android:name="com.leikz.moneytracker.ui.dashboard.DashboardFragment"
-        android:label="@string/title_dashboard"
-        tools:layout="@layout/fragment_dashboard" />
+        android:id="@+id/navigation_query"
+        android:name="com.leikz.moneytracker.ui.Query.QueryFragment"
+        android:label="@string/title_query"
+        tools:layout="@layout/fragment_query" />
 
     <fragment
-        android:id="@+id/navigation_notifications"
-        android:name="com.leikz.moneytracker.ui.notifications.NotificationsFragment"
-        android:label="@string/title_notifications"
-        tools:layout="@layout/fragment_notifications" />
+        android:id="@+id/navigation_chart"
+        android:name="com.leikz.moneytracker.ui.chart.ChartFragment"
+        android:label="@string/title_chart"
+        tools:layout="@layout/fragment_chart" />
 </navigation>

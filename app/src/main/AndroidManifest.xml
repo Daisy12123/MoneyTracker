@@ -4,6 +4,12 @@
 <!--    添加sd卡的读、写权限以调用系统相册-->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
+<!--    适配Android13版本-->
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO"/>
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO"/>
+
 <!--    允许网络请求权限-->
     <uses-permission android:name="android.permission.INTERNET" />
 
